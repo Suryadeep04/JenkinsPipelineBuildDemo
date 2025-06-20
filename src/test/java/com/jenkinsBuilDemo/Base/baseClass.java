@@ -43,6 +43,6 @@ public class baseClass {
     }
 
     public WebDriver getDriver(){
-        return this.driver;
+        return driver;
     }
 }
