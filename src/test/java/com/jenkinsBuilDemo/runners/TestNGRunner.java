@@ -4,11 +4,12 @@ import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 
 @CucumberOptions(
-        features = {"Features/jenkinsbuilddemo.feature"},
+        features = {"Features"},
         glue = {"com.jenkinsBuilDemo.StepDefs"},
         plugin = {
                 "pretty",
-                "json:target/cucumber-report/cumcumber.json"
+                "html:target/cucumber-report/cucumber-html-report.html",
+                "json:target/cucumber-report/cucumber.json"
         },
         tags = "@TC1"
 )

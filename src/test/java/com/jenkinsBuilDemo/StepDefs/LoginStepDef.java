@@ -13,9 +13,10 @@ public class LoginStepDef {
         searchGoogle = new pgSearchGoogle();
     }
 
-    @Given("Navigate to the application page")
-    public void navigate_to_the_application_page() throws Exception{
+    @Given("^Navigate to the application page (.+)$")
+    public void navigate_to_the_application_page(String input) throws Exception{
         System.out.println("inside login stepdef");
+        System.out.println("input from feature file: "+input);
         searchGoogle.launchApp();
     }
 }

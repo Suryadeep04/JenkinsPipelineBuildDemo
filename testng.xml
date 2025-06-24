@@ -4,6 +4,7 @@
     <test name="CucumberTest">
         <classes>
             <class name="com.jenkinsBuilDemo.runners.TestNGRunner"/>
+            <class name="com.jenkinsBuilDemo.hooks.ReportHook"/>
         </classes>
     </test>
 </suite>
