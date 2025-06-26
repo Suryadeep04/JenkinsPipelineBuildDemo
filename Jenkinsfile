@@ -1,16 +1,33 @@
 pipeline {
-    agent any
+    agent {
+        any
+    }
 
     parameters {
-        string(name: 'Tag', defaultValue: '@Smoke', description: 'Enter Cucumber Tag')
+        choice(name: 'Tag', choices: ['@TC1','@TC2'], description: 'Select the cucumber Tag to run')
     }
 
     stages {
-        stage('Print Tag') {
+        stage('Check out Code') {//stage to checkout code from SCM
             steps {
-                echo "Running for Tag: ${params.Tag}"
+                echo "Checking out code from SCM"
+                checkout scm
             }
-        }
+        }// end stage
+
+        stage('Run Tests') {//stage to execute tests
+            steps {
+                echo "Running tests for given cucumber tag"
+                bat "mvn clean install test -Dcucumber.filter.tags=${params.Tag}"
+            }
+        }//end stage
+
+        stage('Archive Reports') {//stage to archive reports
+            steps {
+                echo "Archiving reports"
+                archiveArtifacts artifacts: 'target/Reports/Latest/**/*.*'
+            }
+        }//end stage
     }
 
     post {
