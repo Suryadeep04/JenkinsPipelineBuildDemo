@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        any
-    }
+    agent any
 
     parameters {
         choice(name: 'Tag', choices: ['@TC1','@TC2'], description: 'Select the cucumber Tag to run')
