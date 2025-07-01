@@ -9,8 +9,11 @@ Feature: Jenkins build demo
     |  commentTwo  |
 #    |  commentThree  |
 
+  @javapractice
   Scenario Outline: Read Excel File
-#    Given Read and print Excel data <TCID>
+    Given Read and print Excel data <TCID>
+    Given Read and print JSON data
 
     Examples:
-#      |TCID|
+    |TCID|
+    | data |
