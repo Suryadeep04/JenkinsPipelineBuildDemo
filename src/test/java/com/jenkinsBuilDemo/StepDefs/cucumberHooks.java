@@ -1,16 +1,20 @@
 package com.jenkinsBuilDemo.StepDefs;
 
+import com.aventstack.extentreports.ExtentTest;
 import com.jenkinsBuilDemo.Base.baseClass;
+import com.jenkinsBuilDemo.Managers.reportManager;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.chrome.ChromeDriver;
+import io.cucumber.java.Scenario;
 
+import java.io.IOException;
 import java.time.Duration;
 
-public class hooks extends baseClass {
 
-    @Before
+
+public class cucumberHooks extends baseClass {
+
+    @Before(order = 1)
     public void setupBrowser(){
         try {
             String browser = configProp.getProperty("browser");
@@ -31,6 +35,12 @@ public class hooks extends baseClass {
             driver.get(configProp.getProperty("url"));
             System.out.println("browser setup completed");
         }catch (Exception e){}
+    }
+
+    @Before(order = 2)
+    public void reportHook(Scenario scenario) throws IOException {
+        ExtentTest test = reportManager.getTestReporter().createTest(scenario.getName());
+        reportManager.setExtentTest(test);
     }
 
     @After

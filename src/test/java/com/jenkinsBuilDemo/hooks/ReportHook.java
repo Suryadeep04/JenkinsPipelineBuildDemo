@@ -1,9 +1,14 @@
 package com.jenkinsBuilDemo.hooks;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.jenkinsBuilDemo.Base.baseClass;
+import com.jenkinsBuilDemo.Managers.reportManager;
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +23,15 @@ import java.util.Properties;
 
 public class ReportHook {
 
+
+
+    @BeforeSuite
+    public void reportManager() throws IOException {
+        reportManager.createReport();
+        System.out.println("inside before suite hook");
+
+    }
+
     @AfterSuite
     public void generateReport() {
         try {
@@ -27,43 +41,12 @@ public class ReportHook {
                 System.out.println("❌ No cucumber.json found. Skipping report generation.");
                 return;
             }
-
-            String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()).replaceAll("-","");
-            generateReport("target/Reports/"+timestamp,jsonReport);
-            System.out.println("✅ Advanced Cucumber report generated at: target/Reports/"+timestamp);
-
-            Path latestPath = Paths.get("target/Reports/Latest");
-            if (Files.exists(latestPath)) {
-                deleteFolder(latestPath); // delete existing 'latest'
-            }
-            Files.createDirectories(latestPath);
-
-            generateReport("target/Reports/Latest",jsonReport);
-            System.out.println("📂 'latest' report available at: " + latestPath.toAbsolutePath());
+            reportManager.generateCucumberReport(jsonReport);
+            reportManager.getTestReporter().flush();
 
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("❌ Report generation failed");
-        }
-    }
-
-    private void generateReport(String reportPath, File jsonReport) throws IOException {
-        File reportOutputDirectory = new File(reportPath);
-        Configuration config = new Configuration(reportOutputDirectory, "CucumberProject");
-        config.addClassifications("Platform", "Windows");
-        config.addClassifications("Browser", readProperty().getProperty("browser"));
-        config.addClassifications("Branch", "release/1.0");
-
-        ReportBuilder reportBuilder = new ReportBuilder(
-                Collections.singletonList(jsonReport.getAbsolutePath()), config);
-        reportBuilder.generateReports();
-    }
-    private void deleteFolder(Path path) throws IOException {
-        if (Files.exists(path)) {
-            Files.walk(path)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
         }
     }
 
